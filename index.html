@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Body Fat Calculator</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-size: 16px;
+      background: black;
+      font-family: "proxima-nova", Helvetica, Arial, sans-serif;
+    }
+
+    form {
+      margin: 30px auto;
+      max-width: 450px;
+      padding: 10px 30px;
+      background: #fafafa;
+    }
+
+    form h3 {
+      text-align: center;
+      font-size: 2rem;
+      color: #1F447A;
+    }
+    .form-gender-field{
+      text-align: center;
+      margin:20px;
+    }
+
+    .form-field,
+    .result-field {
+      position: relative;
+      margin-bottom: 10px;
+    }
+
+    .form-field input,
+    .result-field input {
+      width: 100%;
+      padding: 30px 20px 10px 20px;
+      border:1px solid #C7C7C7;
+      line-height: 20px;
+    }
+    .result-field{
+      display: none;
+    }
+
+    .form-field input:focus + label,
+    .form-field input:valid + label {
+      color: #1F447A;
+      font-weight: bold;
+      top: 12px;
+    }
+
+    .result-field label{
+      position: absolute;
+      color: #1F447A;
+      font-weight: bold;
+      left: 15px;
+      top: 12px;
+    }
+    .form-field input:focus + label:after {
+      content: ":"
+    }
+
+    .form-field label {
+      position: absolute;
+      top: 25px;
+      left: 20px;
+      color: #777;
+      background: #fff;
+      transition: 0.5s;
+    }
+    .form-field button{
+      width: 100%;
+      height: 54px;
+      padding: 1px 6px;
+      background: #1F447A;
+      border: 2px solid #1F447A;
+
+      color: white;
+      font-size: 15px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+  </style>
+
+  <script language="JavaScript">
+    function forMen() {
+      document.getElementById("hipdiv").style.display = "none";
+      document.getElementById("waistdiv").style.display = "none";
+      document.getElementById("abdomendiv").style.display = "block";
+    }
+    function forWomen() {
+      document.getElementById("hipdiv").style.display = "block";
+      document.getElementById("waistdiv").style.display = "block";
+      document.getElementById("abdomendiv").style.display = "none";
+    }
+    function calculateBodyFat() {
+      var gender = document.bmiForm.gender.value;
+      var abdomen = parseFloat(document.bmiForm.abdomen.value);
+      var waist = parseFloat(document.bmiForm.waist.value);
+      var hip = parseFloat(document.bmiForm.hip.value);
+      var neck = parseFloat(document.bmiForm.neck.value);
+      var height = parseFloat(document.bmiForm.height.value);
+      var weight = parseFloat(document.bmiForm.weight.value);
+
+      // alert(waist);
+
+      if (abdomen > 0 && neck > 0 && height > 0 && weight > 0 && gender=='male') {
+        // male body fat calculations
+        var bodyFatPercentage = 86.010 * Math.log10(abdomen - neck) - 70.041 * Math.log10(height) + 36.76;
+        var bodyFatMass = bodyFatPercentage * weight / 100;
+
+        document.getElementById("result-field1").style.display = "block";
+        document.getElementById("result-field2").style.display = "block";
+        document.bmiForm.bodyFatPercentage.value = bodyFatPercentage;
+        document.bmiForm.bodyFatMass.value = bodyFatMass;
+
+      }else if(waist > 0 && hip > 0 && neck > 0 && height > 0 && weight > 0 && gender=='female'){
+        // female body fat calculations
+        var bodyFatPercentage = (163.205 * Math.log10(waist + hip - neck)) - (97.684 * Math.log10(height)) - 78.387;
+        // var aa = waist+hip;
+        // var bodyFatPercentage = ((aa));
+        var bodyFatMass = bodyFatPercentage * weight / 100;
+
+
+        document.getElementById("result-field1").style.display = "block";
+        document.getElementById("result-field2").style.display = "block";
+        document.bmiForm.bodyFatPercentage.value = bodyFatPercentage;
+        document.bmiForm.bodyFatMass.value = bodyFatMass;
+      }else {
+        alert("Please Fill in everything correctly")
+      }
+    }
+
+  </script>
+</head>
+
+<body>
+
+  <form name="bmiForm">
+    <h3>Body Fat Calculator</h3>
+    <div class="form-gender-field">
+      <input type="radio" id="male" name="gender" value="male" onclick="forMen()">
+      <label for="male">Male</label>
+      <input type="radio" id="female" name="gender" value="female" onclick="forWomen()">
+      <label for="female">Female</label>
+    </div>
+
+    <div class="form-field" id="abdomendiv">
+      <input type="text"  id="abdomen" name="abdomen" size="10" required>
+      <label for="abdomen">Abdomen (inches)</label>
+    </div>
+
+    <div class="form-field" id="waistdiv">
+      <input type="text"  id="waist" name="waist" size="10" required>
+      <label for="waist">Waist (inches)</label>
+    </div>
+
+    <div class="form-field" id="hipdiv">
+      <input type="text" id="hip" name="hip" size="10" required>
+      <label for="hip">Hip (inches)</label>
+    </div>
+
+    <div class="form-field">
+      <input type="text" id="neck" name="neck" size="10" required>
+      <label for="neck">Neck (inches)</label>
+    </div>
+
+    <div class="form-field">
+      <input type="text" id="height" name="height" size="10" required>
+      <label for="height">Height (inches)</label>
+    </div>
+
+    <div class="form-field">
+      <input type="text" id="weight" name="weight" size="10" required>
+      <label for="weight">Weight (lb)</label>
+    </div>
+
+    <div class="form-field">
+      <button type="button" onclick="calculateBodyFat()" name="button">Calculate</button>
+    </div>
+
+    <div class="result-field" id="result-field1">
+      <input type="text" id="bodyFatPercentage" name="bodyFatPercentage" size="10" disabled>
+      <label for="bodyFatPercentage">Body Fat Percentage (%)</label>
+    </div>
+
+    <div class="result-field" id="result-field2">
+      <input type="text" id="bodyFatMass" name="bodyFatMass" size="25" disabled>
+      <label for="bodyFatMass">Body Fat Mass (lb)</label>
+    </div>
+
+  </form>
+</body>
+
+</html>
